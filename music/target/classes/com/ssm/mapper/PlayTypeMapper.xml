@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >    
+<mapper namespace="com.ssm.dao.playtype.IPlayTypeDao" >      
+    <resultMap id="BaseResultMap" type="com.ssm.dto.category.PlayType">    
+        <result column="id" property="id" jdbcType="INTEGER" />    
+        <result column="catId" property="catId" jdbcType="INTEGER" />    
+        <result column="catName" property="catName" jdbcType="VARCHAR" />  
+        <result column="catLink" property="catLink" jdbcType="VARCHAR" /> 
+    </resultMap>    
+    
+    <sql id="Base_Column_List">    
+        id, catId, catName, catLink
+    </sql>   
+  
+    <select id="findAll" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from PlayType    
+    </select>
+    
+    <select id="findById" resultMap="BaseResultMap">
+    	select    
+        <include refid="Base_Column_List" />    
+        from PlayType
+        where catId=#{catId,jdbcType=INTEGER}
+    </select>
+    
+    <select id="findByName" resultMap="BaseResultMap">
+    	select    
+        <include refid="Base_Column_List" />    
+        from PlayType
+        where catName='${_parameter}'
+    </select>
+    
+</mapper>    

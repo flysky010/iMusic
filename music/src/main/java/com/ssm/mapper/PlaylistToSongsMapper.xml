@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >    
+<mapper namespace="com.ssm.dao.playlisttosongs.IPlaylistToSongsDao" >      
+    <resultMap id="BaseResultMap" type="com.ssm.dto.playlisttosongs.PlaylistToSongs">    
+        <result column="id" property="id" jdbcType="INTEGER" />    
+        <result column="pid" property="pid" jdbcType="INTEGER" />    
+        <result column="sid" property="sid" jdbcType="BIGINT" />    
+    </resultMap>    
+    
+    <sql id="Base_Column_List">    
+        id, pid, sid
+    </sql>   
+       
+    <select id="findByPid" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from playlistToSong
+        where pid = #{pid,jdbcType=INTEGER}      
+    </select> 
+    
+    <select id="findAll" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from playlistToSong     
+    </select>
+    
+    <select id="findIsExistByPidAndSid" resultType="Integer">
+    	select count(1)
+    	from playlistToSong
+    	where pid=#{0}
+    	and sid=#{1}
+    </select>
+    
+    <insert id="add" parameterType="com.ssm.dto.playlisttosongs.PlaylistToSongs">
+    	insert into playlistToSong 
+    	<trim prefix="(" suffix=")" suffixOverrides="," > 
+    	 	<if test="pid != null" >      
+            	pid,      
+          	</if>
+          	<if test="sid != null" >      
+            	sid,      
+          	</if>
+    	</trim>    
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+    		<if test="pid != null" >      
+            	#{pid,jdbcType=INTEGER},      
+          	</if>  
+          	<if test="sid != null" >      
+            	#{sid,jdbcType=INTEGER},      
+          	</if>    
+        </trim>  
+    </insert>
+    
+    <delete id="removeByPidAndSid">
+    	delete from playlistToSong
+    	where pid = #{0} 
+    	AND sid = #{1}
+    </delete>
+    
+    <delete id="removeByPid">
+    	delete from playlistToSong
+    	where pid = #{0} 
+    </delete>
+    
+    <delete id="removeBySid">
+    	delete from playlistToSong
+    	where sid = #{0}
+    </delete>
+    
+</mapper>    

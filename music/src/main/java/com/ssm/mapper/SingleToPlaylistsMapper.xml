@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >    
+<mapper namespace="com.ssm.dao.singletoplaylists.ISingleToPlaylistsDao" >      
+    <resultMap id="BaseResultMap" type="com.ssm.dto.singletoplaylist.SingleToPlaylists">     
+        <result column="id" property="id" jdbcType="INTEGER" />    
+        <result column="pid" property="pid" jdbcType="INTEGER" /> 
+        <result column="catId" property="catId" jdbcType="INTEGER" />    
+        <result column="catName" property="catName" jdbcType="VARCHAR" /> 
+        <result column="catLink" property="catLink" jdbcType="VARCHAR" /> 
+    </resultMap>    
+    
+    <sql id="Base_Column_List">    
+        id, pid, catId,catName,catLink
+    </sql>   
+     
+     <!-- 查询单个类型列表-->    
+    <select id="findByPid" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from singletoplaylists
+        where pid = #{pid,jdbcType=INTEGER}      
+    </select> 
+    
+    <select id="findByCatId" resultMap="BaseResultMap">
+    	select    
+        <include refid="Base_Column_List" />    
+        from singletoplaylists
+        where catId = #{catId,jdbcType=INTEGER}
+    </select>
+    
+    <select id="findCountByCatId" resultType="Integer">
+    	select count(1)   
+        from singletoplaylists
+        where catId = #{catId,jdbcType=INTEGER}
+    </select>
+    
+    <select id="findByCatName" resultMap="BaseResultMap">
+    	select    
+        <include refid="Base_Column_List" />    
+        from singletoplaylists
+        where catName = #{0} 
+    </select>
+    
+    <select id="findCountByCatName" resultType="Integer">
+    	select count(1)   
+        from singletoplaylists
+        where catName = #{0}
+    </select>
+    
+    <insert id="add" parameterType="com.ssm.dto.singletoplaylist.SingleToPlaylists">
+    	insert into singletoplaylists
+    	<trim prefix="(" suffix=")" suffixOverrides="," >      
+	    	<if test="pid != null" >      
+	            pid,      
+	        </if> 
+	        <if test="catId != null" >      
+	            catId,      
+	        </if>
+	        <if test="catName != null" >      
+	            catName,      
+	        </if>
+	        <if test="catLink != null" >      
+	            catLink,      
+	        </if>
+        </trim>      
+        <trim prefix="values (" suffix=")" suffixOverrides="," > 
+	        <if test="pid != null" >      
+	           #{pid,jdbcType=INTEGER},      
+	        </if>
+	        <if test="catId != null" >      
+	           #{catId,jdbcType=INTEGER},      
+	        </if>
+	        <if test="catName != null" >      
+	           #{catName,jdbcType=VARCHAR},      
+	        </if>
+	        <if test="catLink != null" >      
+	           #{catLink,jdbcType=VARCHAR},      
+	        </if>
+        </trim>    
+    </insert>
+    
+    <delete id="removeByPId" parameterType="java.lang.Integer">
+    	delete from singletoplaylists    
+        where pid = #{id,jdbcType=INTEGER}
+    </delete>
+    
+</mapper>    

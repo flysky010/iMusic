@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >    
+<mapper namespace="com.ssm.dao.song.ISongDao" >      
+    <resultMap id="BaseResultMap" type="com.ssm.dto.song.Song">    
+        <result column="id" property="id" jdbcType="INTEGER" />    
+        <result column="sid" property="sid" jdbcType="BIGINT" /> 
+        <result column="stitle" property="stitle" jdbcType="VARCHAR" />    
+        <result column="stime" property="stime" jdbcType="VARCHAR" /> 
+        <result column="singer" property="singer" jdbcType="VARCHAR" /> 
+        <result column="singerID" property="singerID" jdbcType="BIGINT" /> 
+        <result column="albumID" property="albumID" jdbcType="BIGINT" /> 
+        <result column="albumName" property="albumName" jdbcType="VARCHAR" /> 
+        <result column="path" property="path" jdbcType="VARCHAR" /> 
+        <result column="size" property="size" jdbcType="DOUBLE" />
+        <result column="albumPic" property="albumPic" jdbcType="VARCHAR" /> 
+        <result column="lyric" property="lyric" jdbcType="VARCHAR" /> 
+        <result column="playNum" property="playNum" jdbcType="BIGINT" /> 
+        <result column="lastWeekendPlayNum" property="lastWeekendPlayNum" jdbcType="BIGINT" /> 
+        <result column="increaseNum" property="increaseNum" jdbcType="BIGINT" /> 
+        <result column="lastUpdateTime" property="lastUpdateTime" jdbcType="VARCHAR" /> 
+        <result column="createTime" property="createTime" jdbcType="VARCHAR" />
+    </resultMap>    
+    
+    <sql id="Base_Column_List">    
+        id, sid, stitle,stime,singer,
+        singerID, albumID, albumName, path,
+        size, albumPic, lyric, playNum,
+        lastWeekendPlayNum, increaseNum, lastUpdateTime, createTime
+    </sql>   
+     
+    <!-- 查询单个类型列表-->    
+    <select id="findBySid" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from song
+        where sid = #{sid,jdbcType=INTEGER}      
+    </select> 
+    
+    <!-- 批量查询-->    
+    <select id="querySongByBatch" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from song    
+        where sid in    
+        <foreach collection="list" item="sId" index="index" open="(" separator="," close=")">    
+             #{sId,jdbcType=BIGINT}    
+        </foreach>    
+    </select>
+    
+    <select id="querySongByName" resultMap="BaseResultMap" 
+    		parameterType="java.lang.String">    
+        select    
+        <include refid="Base_Column_List" />    
+        from song    
+        where 1=1 
+        <if test="_parameter != null" > 
+        	and stitle like '%${_parameter}%'  
+        </if>     
+    </select>
+    
+    <select id="findTop" resultMap="BaseResultMap">
+    	select * from song ORDER BY playNum DESC LIMIT #{0};
+    </select>
+    
+    <select id="findTopOfUp" resultMap="BaseResultMap">
+    	select * from song ORDER BY increaseNum DESC LIMIT #{0};
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap">
+    	select * from song
+    </select>
+    
+    <select id="findTopOfNew" resultMap="BaseResultMap">
+    	select * from song ORDER BY createTime DESC LIMIT #{0};
+    </select>
+    
+    <select id="queryCount" resultType="Integer">
+    	select count(1) from song
+    </select>
+    
+    <select id="queryCountByName" resultType="Integer"
+    	parameterType="java.lang.String">
+    	select count(1) from song
+    	WHERE 1=1
+    	<if test="_parameter != null" > 
+        	and stitle like '%${_parameter}%'  
+        </if>
+    </select>
+    
+    <!-- 插入文件描述信息 -->    
+    <insert id="add" parameterType="com.ssm.dto.song.Song">    
+        insert into song      
+        <trim prefix="(" suffix=")" suffixOverrides="," >      
+          <if test="sid != null" >      
+            sid,      
+          </if>      
+          <if test="stitle != null" >      
+            stitle,      
+          </if>      
+          <if test="stime != null" >      
+            stime,      
+          </if> 
+          <if test="singer != null" >      
+            singer,      
+          </if>
+          <if test="singerID != null" >      
+            singerID,      
+          </if>
+          <if test="albumID != null" >      
+            albumID,      
+          </if> 
+          <if test="albumName != null" >      
+            albumName,      
+          </if> 
+          <if test="path != null" >      
+            path,      
+          </if> 
+          <if test="size != null" >      
+            size,      
+          </if> 
+          <if test="albumPic != null" >      
+            albumPic,      
+          </if> 
+          <if test="lyric != null" >      
+            lyric,      
+          </if> 
+          <if test="createTime != null" >      
+            createTime,      
+          </if>   
+        </trim>      
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+          <if test="sid != null" >      
+            #{sid,jdbcType=INTEGER},      
+          </if>      
+          <if test="stitle != null" >      
+            #{stitle,jdbcType=VARCHAR},      
+          </if>      
+          <if test="singer != null" >      
+            #{singer,jdbcType=VARCHAR},      
+          </if>  
+          <if test="singerID != null" >      
+            #{singerID,jdbcType=INTEGER},      
+          </if>
+          <if test="albumID != null" >      
+            #{albumID,jdbcType=INTEGER},      
+          </if> 
+          <if test="albumName != null" >      
+            #{albumName,jdbcType=VARCHAR},      
+          </if>  
+          <if test="path != null" >      
+            #{path,jdbcType=VARCHAR},      
+          </if>
+          <if test="size != null" >      
+            #{size,jdbcType=DOUBLE},      
+          </if>
+          <if test="albumPic != null" >      
+            #{albumPic,jdbcType=VARCHAR},      
+          </if>
+          <if test="lyric != null" >      
+            #{lyric,jdbcType=VARCHAR},      
+          </if> 
+          <if test="createTime != null" >      
+            #{createTime,jdbcType=VARCHAR},      
+          </if>
+        </trim>       
+    </insert>
+    
+    <delete id="removeBySingerAndTitle" parameterType="java.lang.String">
+    	delete       
+        from song
+        where 1=1 
+        AND singer = #{0}
+        AND stitle = #{1}
+    </delete>
+    
+    <delete id="removeBySid" parameterType="java.lang.Long">
+    	delete       
+        from song
+        where 1=1 
+        AND sid = #{0}
+    </delete>
+  
+    <update id="update" parameterType="com.ssm.dto.song.Song">
+    	update song      
+        <set >      
+          <if test="stitle != null" >      
+            stitle = #{stitle,jdbcType=VARCHAR},      
+          </if>      
+          <if test="stime != null" >      
+            stime = #{stime,jdbcType=VARCHAR},      
+          </if>      
+          <if test="singer != null" >      
+            singer = #{singer,jdbcType=VARCHAR},      
+          </if> 
+          <if test="albumName != null" >      
+            albumName = #{albumName,jdbcType=VARCHAR},      
+          </if>  
+          <if test="path != null" >      
+            path = #{path,jdbcType=VARCHAR},      
+          </if>  
+          <if test="size != null" >      
+            size = #{size,jdbcType=DOUBLE},      
+          </if> 
+          <if test="path != null" >      
+            path = #{path,jdbcType=VARCHAR},      
+          </if>
+          <if test="albumPic != null" >      
+            albumPic = #{albumPic,jdbcType=VARCHAR},      
+          </if> 
+          <if test="lyric != null" >      
+            lyric = #{lyric,jdbcType=VARCHAR},      
+          </if>
+          <if test="playNum != null" >      
+            playNum = #{playNum,jdbcType=BIGINT},      
+          </if>
+          <if test="lastWeekendPlayNum != null" >      
+            lastWeekendPlayNum = #{lastWeekendPlayNum,jdbcType=BIGINT},      
+          </if>
+          <if test="increaseNum != null" >      
+            increaseNum = #{increaseNum,jdbcType=BIGINT},      
+          </if>
+          <if test="lastUpdateTime != null" >      
+            lastUpdateTime = #{lastUpdateTime,jdbcType=VARCHAR},      
+          </if>
+          <if test="createTime != null" >      
+            createTime = #{createTime,jdbcType=VARCHAR},      
+          </if>
+        </set>      
+        where sid = #{sid,jdbcType=BIGINT} 
+    </update>
+</mapper>    

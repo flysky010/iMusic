@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >    
+<mapper namespace="com.ssm.dao.ranklist.IRanklistDao" >      
+    <resultMap id="BaseResultMap" type="com.ssm.dto.ranklist.Ranklist">    
+        <result column="id" property="id" jdbcType="INTEGER" />    
+        <result column="rid" property="rid" jdbcType="INTEGER" />    
+        <result column="rname" property="rname" jdbcType="VARCHAR" />    
+        <result column="rmodifytime" property="rmodifytime" jdbcType="VARCHAR" />  
+        <result column="rsongnum" property="rsongnum" jdbcType="INTEGER" />   
+        <result column="rplaynum" property="rplaynum" jdbcType="INTEGER" />
+        <result column="rpic" property="rpic" jdbcType="VARCHAR" /> 
+    </resultMap>    
+    
+    <sql id="Base_Column_List">    
+        id, rid, rname, rmodifytime,
+        rsongnum, rplaynum, rpic
+    </sql>   
+    
+    <select id="findAll" resultMap="BaseResultMap">
+    	select    
+        <include refid="Base_Column_List" />    
+        from ranklist
+    </select>
+     
+     <!-- 查询单个类型列表-->    
+    <select id="findByRid" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from ranklist
+        where rid = #{rid,jdbcType=INTEGER}      
+    </select> 
+     
+    <update id="updatePlayNum">      
+        update ranklist      
+        <set>           
+            rplaynum = rplaynum + 1             
+        </set>      
+        where rid = #{rid,jdbcType=INTEGER}     
+    </update>    
+      
+</mapper>    

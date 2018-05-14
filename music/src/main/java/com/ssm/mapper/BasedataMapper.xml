@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >    
+<mapper namespace="com.ssm.dao.basedata.IBasedataDao" >      
+    <resultMap id="BaseResultMap" type="com.ssm.dto.basedata.Basedata">    
+        <result column="id" property="id" jdbcType="INTEGER" />    
+        <result column="singerId" property="singerId" jdbcType="BIGINT" />    
+        <result column="singer" property="singer" jdbcType="VARCHAR" />    
+        <result column="albumId" property="albumId" jdbcType="BIGINT" /> 
+        <result column="albumName" property="albumName" jdbcType="VARCHAR" /> 
+        <result column="songId" property="songId" jdbcType="BIGINT" /> 
+        <result column="songName" property="songName" jdbcType="VARCHAR" /> 
+        <result column="songTime" property="songTime" jdbcType="VARCHAR" />  
+        <result column="albumPic" property="albumPic" jdbcType="VARCHAR" />
+    </resultMap>    
+    
+    <sql id="Base_Column_List">    
+        id, singerId, singer, albumId,
+        albumName, songId ,songName, songTime, 
+        albumPic   
+    </sql>   
+
+    <!-- 查询所有基础数据-->    
+    <select id="findAll" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from basedata    
+    </select>    
+    
+    <select id="findByName" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from basedata
+        where 1=1 
+        <if test="_parameter != null">
+        	AND (singer like '%${_parameter}%' 
+        	OR albumName like '%${_parameter}%' )    
+        </if>    
+    </select> 
+    
+    <select id="findById" resultMap="BaseResultMap">    
+        select    
+        <include refid="Base_Column_List" />    
+        from basedata
+        where 1=1 
+        AND id = #{id,jdbcType=INTEGER}      
+    </select>
+    
+    <select id="findBySingerAndTitle" resultMap="BaseResultMap"
+    	parameterType="java.lang.String" >
+    	select    
+        <include refid="Base_Column_List" />    
+        from basedata
+        where 1=1 
+        AND singer = #{0}
+        AND songName = #{1}
+    </select>
+    
+    <select id="queryCount" resultType="Integer">
+    	select count(1)   
+        from basedata
+    </select>
+    
+    <insert id="add" parameterType="com.ssm.dto.basedata.Basedata">    
+        insert into basedata      
+        <trim prefix="(" suffix=")" suffixOverrides="," >      
+          <if test="singerId != null" >      
+            singerId,      
+          </if>      
+          <if test="singer != null" >      
+            singer,      
+          </if>      
+          <if test="albumId != null" >      
+            albumId,      
+          </if> 
+          <if test="albumName != null" >      
+            albumName,      
+          </if>
+          <if test="songId != null" >      
+            songId,      
+          </if>
+          <if test="songName != null" >      
+            songName,      
+          </if> 
+          <if test="songTime != null" >      
+            songTime,      
+          </if>  
+          <if test="albumPic != null" >      
+            albumPic,      
+          </if>   
+        </trim>      
+        <trim prefix="values (" suffix=")" suffixOverrides="," >      
+          <if test="singerId != null" >      
+            #{singerId,jdbcType=BIGINT},      
+          </if>      
+          <if test="singer != null" >      
+            #{singer,jdbcType=VARCHAR},      
+          </if>
+          <if test="albumId != null" >      
+            #{albumId,jdbcType=BIGINT},      
+          </if>      
+          <if test="albumName != null" >      
+            #{albumName,jdbcType=VARCHAR},      
+          </if> 
+          <if test="songId != null" > 
+           	#{songId,jdbcType=BIGINT},         
+          </if>
+          <if test="songName != null" >      
+            #{songName,jdbcType=VARCHAR},       
+          </if> 
+          <if test="songTime != null" >      
+            #{songTime,jdbcType=VARCHAR},       
+          </if>
+          <if test="albumPic != null" >      
+            #{albumPic,jdbcType=VARCHAR},       
+          </if>     
+        </trim>       
+    </insert>   
+    
+    <!-- 删除基础数据 -->    
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">    
+        delete from basedata    
+        where id = #{id,jdbcType=INTEGER}      
+    </delete>
+    
+    <update id="updateById" parameterType="com.ssm.dto.basedata.Basedata" >      
+        update basedata      
+        <set >      
+          <if test="singer != null" >      
+            singer = #{singer,jdbcType=VARCHAR},      
+          </if>      
+          <if test="albumName != null" >      
+            albumName = #{albumName,jdbcType=VARCHAR},      
+          </if> 
+          <if test="songName != null" >      
+            songName = #{songName,jdbcType=VARCHAR},      
+          </if>   
+          <if test="songTime != null" >      
+            songTime = #{songTime,jdbcType=VARCHAR},      
+          </if>
+          <if test="albumPic != null" >      
+            albumPic = #{albumPic,jdbcType=VARCHAR},      
+          </if>      
+        </set>      
+        where id = #{id,jdbcType=INTEGER}     
+    </update>
+      
+</mapper>    
